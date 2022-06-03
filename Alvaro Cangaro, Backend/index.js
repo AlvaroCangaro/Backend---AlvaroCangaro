@@ -1,53 +1,168 @@
-class Usuario {
-    constructor(nombre, apellido, libros, mascotas) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.libros = libros;
-        this.mascotas = mascotas;
+// class Usuario {
+//     constructor(nombre, apellido, libros, mascotas) {
+//         this.nombre = nombre;
+//         this.apellido = apellido;
+//         this.libros = libros;
+//         this.mascotas = mascotas;
+//     }
+
+//     getFullName() {
+//         console.log(`Nombre completo: ${this.nombre} ${this.apellido}`);
+//     }
+
+//     addMascota(mascota) {
+//         this.mascotas.push(mascota)
+//         console.log(`Has agregado: ${mascota}`)
+//     }
+
+//     countMascotas() {
+//         console.log(`La cantidad de mascotas que tenes es: ${this.mascotas.length}`)
+//     }
+
+//     addBook(titulo, escritor) {
+//         this.libros.push({ nombre: titulo, autor: escritor })
+//         console.log(`Has agregado: ${titulo} de ${escritor}`)
+//     }
+
+//     getBookNames() {
+//         let titulos = []
+//         this.libros.forEach(libros => {
+//             titulos.push(libros.nombre)
+//         });
+//         console.log(`Tus libros son: ${titulos}`)
+//     }
+
+// }
+
+// let user = new Usuario(
+//     "Alvaro", "Cangaro",
+
+//     [{
+//         nombre: "Farenheit 451", autor: "Ray Bradbury"
+//     }],
+//     ["perro", "gato"]
+// )
+
+// user.getFullName()
+// user.addMascota("hamster")
+// user.countMascotas()
+// user.addBook("Los juegos del hambre", "Suzanne Collins")
+// user.getBookNames()
+
+// console.log(user)
+
+
+
+const fs = require("fs");
+
+
+class Contenedor {
+    constructor(archivo) {
+        this.archivo = archivo;
+        fs.promises.writeFile(archivo, "[]");
     }
+    save = async (object) => {
+        let data = await fs.promises.readFile(this.archivo, "utf-8");
+        let arrData = JSON.parse(data);
 
-    getFullName() {
-        console.log (`Nombre completo: ${this.nombre} ${this.apellido}`);
-    }
+        try {
+            arrData = [...arrData, object];
+            object.id = arrData.length;
+            await fs.promises.writeFile(
+                this.archivo,
+                JSON.stringify(arrData, null, 2)
+            );
+            return object.id;
+        } catch (err) {
+            console.log(`No se ha podido guardar el objeto: ${err}`);
+        }
+    };
 
-    addMascota(mascota) {
-        this.mascotas.push(mascota)
-        console.log (`Has agregado: ${mascota}`)
-    }
- 
-    countMascotas() {
-        console.log (`La cantidad de mascotas que tenes es: ${this.mascotas.length}`)
-    }
+    getById = async (numberID) => {
+        let data = await fs.promises.readFile(this.archivo, "utf-8");
+        let arrData = JSON.parse(data);
+        let findID = arrData.find(({ id }) => id == numberID);
+        try {
+            findID == undefined
+                ? console.log(null)
+                : console.log(`Producto: ${numberID} => ${findID.title}`);
+        } catch (error) {
+            console.log(`Error en el procesamiento de búsqueda: ${error}`);
+        }
 
-    addBook(titulo, escritor) {
-        this.libros.push({nombre:titulo , autor:escritor})
-        console.log (`Has agregado: ${titulo} de ${escritor}`)
-    }
+        return findID;
+    };
 
-    getBookNames () {
-        let titulos = []
-        this.libros.forEach(libros => {
-            titulos.push (libros.nombre)
-        });
-        console.log(`Tus libros son: ${titulos}`)
-    }
+    getAll = async () => {
+        let data = await fs.promises.readFile(this.archivo, "utf-8");
+        let arrData = JSON.parse(data);
+        console.log(arrData);
+        return arrData;
+    };
 
-}    
+    deleteById = async (numberID) => {
 
-let user = new Usuario (
-    "Alvaro", "Cangaro",
+        let data = await fs.promises.readFile(this.archivo, "utf-8");
+        let arrData = JSON.parse(data);
 
-    [{
-        nombre: "Farenheit 451" , autor: "Ray Bradbury"
-    }],
-    ["perro", "gato"]
-) 
+        try {
+            let findID = arrData.filter(({ id }) => id != numberID);
+            await fs.promises.writeFile(
+                this.archivo,
+                JSON.stringify(findID, null, 2)
+            );
+        } catch (err) {
+            console.log(`No se ha podido guardar el objeto: ${err}`);
+        }
+    };
 
-user.getFullName()
-user.addMascota("hamster")
-user.countMascotas()
-user.addBook("Los juegos del hambre" , "Suzanne Collins")
-user.getBookNames()
+    deleteAll = () => {
+        console.log("Se han eliminado todos los elementos")
+        fs.promises.writeFile(this.archivo, "");
+    };
+}
 
-console.log(user)
+const file = new Contenedor("./products.json");
+
+const saveFunction = async () => {
+    await file.save({
+        title: "Celular",
+        price: "150000",
+        thumbnail: "foto-celular",
+    });
+
+    await file.save({
+        title: "Cargador",
+        price: "7500",
+        thumbnail: "foto-cargador",
+    });
+
+    await file.save({
+        title: "Funda",
+        price: "5000",
+        thumbnail: "foto-funda",
+    });
+
+    await file.save({
+        title: "Auriculares",
+        price: "15000",
+        thumbnail: "foto-auriculares",
+    });
+
+    await file.save({
+        title: "Protector",
+        price: "2000",
+        thumbnail: "foto-protector",
+    });
+
+    // await file.getById(1);
+
+    // await file.getAll();
+
+    // await file.deleteById(3);
+
+    // await file.deleteAll(); 
+};
+
+saveFunction();
 

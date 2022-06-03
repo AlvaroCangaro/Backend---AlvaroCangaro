@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Celular",
+    "price": "150000",
+    "thumbnail": "foto-celular",
+    "id": 1
+  },
+  {
+    "title": "Cargador",
+    "price": "7500",
+    "thumbnail": "foto-cargador",
+    "id": 2
+  },
+  {
+    "title": "Funda",
+    "price": "5000",
+    "thumbnail": "foto-funda",
+    "id": 3
+  },
+  {
+    "title": "Auriculares",
+    "price": "15000",
+    "thumbnail": "foto-auriculares",
+    "id": 4
+  },
+  {
+    "title": "Protector",
+    "price": "2000",
+    "thumbnail": "foto-protector",
+    "id": 5
+  }
+]
