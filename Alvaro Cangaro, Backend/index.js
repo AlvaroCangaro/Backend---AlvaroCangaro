@@ -55,6 +55,17 @@
 
 const fs = require("fs");
 
+const express = require("express");
+const app = express();
+const PORT = 8080;
+
+const server = app.listen(PORT, () => {
+    console.log(
+        `Servidor HTTP conectado, escuchando en el puerto ${server.address().port}`
+    );
+});
+
+server.on("error", (error) => console.log(`Error en servidor: ${error}`));
 
 class Contenedor {
     constructor(archivo) {
@@ -123,6 +134,25 @@ class Contenedor {
 }
 
 const file = new Contenedor("./products.json");
+
+
+app.get("/productos", async (req, res) => {
+
+    let data = await file.getAll()
+    let productosNombre = data.map(({ title }) => title);
+    res.json(`Productos: [${productosNombre}]`);
+});
+
+app.get("/productoRandom", async (req, res) => {
+    let data = await file.getAll()
+    let random = Math.random() * data.length;
+    let random2 = Math.floor(random)
+    
+    res.send (`<h1>Producto: ${data[random2].title}</h1>
+    <h2>Precio: $${data[random2].price}</h2>
+    `)
+});
+
 
 const saveFunction = async () => {
     await file.save({
