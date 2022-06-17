@@ -7,13 +7,13 @@ app.set("json spaces", 2)
 app.set('views', path.join(__dirname, './views'))
 app.set('view engine', 'pug')
 
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use('/html', express.static('html'))
 
 app.use("/api/productos", rutas)
 
 const server = app.listen(8080, () => {
-    console.log(`Servidor prendido en el puerto ${server.address().port}`)
+    console.log(`Servidor HTTP conectado, escuchando en el puerto ${server.address().port}`)
 })
-server.on('error', err => console.log(`Error en el server ${err}`))
+server.on('error', err => console.log(`Error en servidor: ${err}`))

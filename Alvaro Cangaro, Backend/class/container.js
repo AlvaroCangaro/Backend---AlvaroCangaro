@@ -36,7 +36,7 @@
 //   getAll = async () => {
 //     let data = JSON.parse(await fs.promises.readFile(this.filename, "utf-8"));
 //     console.log(data, "data")
-    
+
 
 //     return data;
 //   };

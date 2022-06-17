@@ -1,5 +1,4 @@
 const { Router } = require("express");
-const { send } = require("express/lib/response");
 const router = Router();
 const products = require("../products.json");
 
@@ -22,7 +21,8 @@ router.post('/', async (req, res) => {
     const { title, price, thumbnail } = req.body;
     if (title && price && thumbnail) {
         try {
-            const id = products.length + 1;
+            let ultimo = products.length - 1;
+            let id = products[ultimo].id + 1;
             const newProduct = { ...req.body, id };
             products.push(newProduct);
             res.json("Guardado");
@@ -36,31 +36,35 @@ router.post('/', async (req, res) => {
     res.status(500).send('Producto cargado exitosamente');
 });
 
-router.put("/:id", (req, res) => {
-    let { id } = req.params;
-    const updateP = products.find(item => item.id == id);
-    console.log(updateP)
-    const { title, price, thumbnail } = req.body
-    if (title && price && thumbnail) {
-        try {
-            updateP = { ...req.body };
-            products.push(updateP);
-            res.json("Guardado");
-            return products.id;
-        } catch (err) {
-            console.log(`No se pudo actualizar el producto ${err}`);
-        }
-    }
-    res.status(500).send('Producto actualizado correctamente');
-});
 
-router.delete("/:id", (req, res) => {
-    const { id } = req.params;
-    let data = products.filter(item => item.id != id);
-    if (!data) {
-        res.json({ error: "Producto no encontrado" })
+router.put('/:id', (req, res) => {
+    let resultado
+    const id = products.findIndex((producto) => {
+        return producto.id == req.params.id;
+    });
+    if (id === -1) {
+        resultado = { error: 'Producto no encontrado' }
+    } else {
+        products[id] = req.body;
+        resultado = "Producto actualizado con exito"
     }
-    res.json(data).send("Producto eliminado");
-});
+    res.json(resultado)
+})
+
+
+router.delete('/:id', (req, res) => {
+    const id = products.findIndex((producto) => {
+        return producto.id == req.params.id;
+    });
+    let resultado = "";
+    if (id === -1) {
+        resultado = { error: 'Producto no encontrado' }
+    } else {
+        products.splice(id, 1);
+        resultado = "Producto eliminado con éxito"
+    }
+    res.json(resultado);
+})
+
 
 module.exports = router;
