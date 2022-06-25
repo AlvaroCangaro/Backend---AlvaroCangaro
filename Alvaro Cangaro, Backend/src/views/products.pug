@@ -1,0 +1,17 @@
+section
+    h2 PRODUCTOS
+    if products
+
+    div(class="s__container")
+    each item in products
+        div( class="box")
+            div(class="image")
+                img(src=`${item.thumbnail}` alt="product")
+            div(class="info")
+                h3(class="title")= `${item.title}`
+                div(class="sub__info")
+                    div(class="price")= `$ ${item.price}`
+            
+    else
+
+        p No hay productos

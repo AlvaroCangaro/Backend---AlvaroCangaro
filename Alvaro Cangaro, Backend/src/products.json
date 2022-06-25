@@ -1,32 +1,32 @@
 [
   {
-    "title": "Celular",
-    "price": "150000",
-    "thumbnail": "foto-celular",
+    "title": "Iphone 13 Pro Max",
+    "price": "275000",
+    "thumbnail": "https://www.powerplanetonline.com/cdnassets/apple_iphone_13_pro_max_grafito_01_l.jpg",
     "id": 1
   },
   {
-    "title": "Cargador",
-    "price": "7500",
-    "thumbnail": "foto-cargador",
+    "title": "Apple Magsafe",
+    "price": "15000",
+    "thumbnail": "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MHXH3?wid=2000&hei=2000&fmt=jpeg&qlt=95&.v=1603835871000",
     "id": 2
   },
   {
-    "title": "Funda",
-    "price": "5000",
-    "thumbnail": "foto-funda",
+    "title": "Funda Silicone Iphone 13 Pro Max",
+    "price": "7500",
+    "thumbnail": "https://www.macstation.com.ar/img/productos/2526-2222.jpg",
     "id": 3
   },
   {
-    "title": "Auriculares",
-    "price": "15000",
-    "thumbnail": "foto-auriculares",
+    "title": "Airpods Pro",
+    "price": "30000",
+    "thumbnail": "https://stylewatch.vtexassets.com/arquivos/ids/203302/Apple-AirPods-Pro_02.jpg?v=637717300440900000",
     "id": 4
   },
   {
-    "title": "Protector",
-    "price": "2000",
-    "thumbnail": "foto-protector",
+    "title": "Ipad Pro",
+    "price": "250000",
+    "thumbnail": "https://www.macstation.com.ar/img/productos/2905-2623-2427-1.jpg",
     "id": 5
   }
 ]

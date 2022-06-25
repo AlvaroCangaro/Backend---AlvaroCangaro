@@ -1,0 +1,23 @@
+<section>
+    <h2 class="tittleP">PRODUCTOS</h2>
+    {{#if products}}
+
+    <div class="s__container">
+    {{#each products}}
+    <div class="box">
+        <div class="image">
+            <img src={{this.thumbnail}} alt="product">
+        </div>
+        <div class="info">
+            <h3 class="title">{{this.title}}</h3>
+            <div class="sub__info">
+                <div class="price">$ {{this.price}}</div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>
+{{else}}
+<p>No hay productos</p>
+{{/if}}
+</section>
