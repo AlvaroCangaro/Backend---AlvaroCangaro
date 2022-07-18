@@ -10,24 +10,26 @@ class Producto {
 }
 
 class Contenedor {
-    constructor(file) {
-        this.file = file;
+    constructor(database, table) {
+        this.database = database;
+        this.table = table;
     }
 
     async save(object) {
         try {
-            let products = JSON.parse(await fs.promises.readFile(this.file, 'utf-8'));
+            await this.database(this.table).insert(object);
+            const id = await this.database(this.table).select('id').max('id');
 
-            !products.length ? object.id = 1 : object.id = products[products.length - 1].id + 1;
-            products.push(object);
-
-            await fs.promises.writeFile(this.file, JSON.stringify(products, null, '\t'));
-            return object.id;
+            return id;
         } catch (err) {
-            if (err.code === 'ENOENT') {
-                object.id = 1;
-                await fs.promises.writeFile(this.file, JSON.stringify([object], null, '\t'));
-                return object.id;
+            // Si la tabla no existe, la crea
+            if ((err.code == 'ER_NO_SUCH_TABLE') || (err.code == 'SQLITE_ERROR' && err.errno == '1')) {
+                const createTable = require(`../db/${this.table}/create_table`);
+                await createTable();
+                await this.database(this.table).insert(object);
+                const id = await this.database(this.table).select('id').max('id');
+
+                return id;
             } else {
                 console.log('Error en método save: ', err);
             }
@@ -36,19 +38,26 @@ class Contenedor {
 
     async getById(number) {
         try {
-            let products = JSON.parse(await fs.promises.readFile(this.file, 'utf-8'));
-            const object = products.find(object => object.id === number);
+            const object = await this.database(this.table).select('*').where('id', '=', number);
             return object ? object : null;
         } catch (err) {
-            console.log('Error en método getById: ', err);
+            if ((err.code == 'ER_NO_SUCH_TABLE') || (err.code == 'SQLITE_ERROR' && err.errno == '1')) {
+                const createTable = require(`../db/${this.table}/create_table`);
+                return null;
+            } else {
+                console.log('Error en método getById: ', err);
+            }
         }
     }
 
     async getAll() {
         try {
-            return JSON.parse(await fs.promises.readFile(this.file, 'utf-8'));
+            const objects = await this.database.from(this.table).select('*');
+            return objects;
         } catch (err) {
-            if (err.code === 'ENOENT') {
+            if ((err.code == 'ER_NO_SUCH_TABLE') || (err.code == 'SQLITE_ERROR' && err.errno == '1')) {
+                const createTable = require(`../db/${this.table}/create_table`);
+                await createTable();
                 return [];
             } else {
                 console.log('Error en método getAll: ', err);
@@ -58,9 +67,7 @@ class Contenedor {
 
     async deleteById(number) {
         try {
-            let products = JSON.parse(await fs.promises.readFile(this.file, 'utf-8'));
-            let productsAct = products.filter(object => object.id != number);
-            await fs.promises.writeFile(this.file, JSON.stringify(productsAct, null, '\t'));
+            await this.database.from(this.table).where('id', '=', number).del();
         } catch (err) {
             console.log('Error en método deleteById: ', err);
         }
@@ -68,32 +75,32 @@ class Contenedor {
 
     async deleteAll() {
         try {
-            await fs.promises.writeFile(this.file, JSON.stringify([], null, '\t'));
+            await this.database.from(this.table).del();
         } catch (err) {
             console.log('Error en método deleteAll: ', err);
         }
     }
 
-    async updateById(id, object) {
-        try {
-            let products = JSON.parse(await fs.promises.readFile(this.file, 'utf-8'));
-            object.id = id;
-            
-            const index = products.findIndex((product) => {
-                return product.id === object.id;
-            })
+    //     async updateById(id, object) {
+    //         try {
+    //             let products = JSON.parse(await fs.promises.readFile(this.file, 'utf-8'));
+    //             object.id = id;
 
-            if (index !== -1) {
-                products[index] = object;
-                await fs.promises.writeFile(this.file, JSON.stringify(products, null, '\t'));
-                return object;
-            } else {
-                return { error: 'Producto no encontrado'}
-            }
-        } catch (err) {
-            console.log('Error en método updateById: ', err);
-        }
-    }
+    //             const index = products.findIndex((product) => {
+    //                 return product.id === object.id;
+    //             })
+
+    //             if (index !== -1) {
+    //                 products[index] = object;
+    //                 await fs.promises.writeFile(this.file, JSON.stringify(products, null, '\t'));
+    //                 return object;
+    //             } else {
+    //                 return { error: 'Producto no encontrado'}
+    //             }
+    //         } catch (err) {
+    //             console.log('Error en método updateById: ', err);
+    //         }
+    //     }
 }
 
 module.exports = {

@@ -3,7 +3,8 @@ const router = Router();
 
 const { Contenedor, Producto } = require('../objects/contenedor');
 
-const productos = new Contenedor('./productos.txt');
+const productosDB = require('../db/database').mySQLConnection;
+const productos = new Contenedor(productosDB, 'products');
 
 router.get('/', async (req, res) => {
     try {

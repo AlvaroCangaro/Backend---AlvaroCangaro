@@ -33,9 +33,10 @@ const expressServer = app.listen(puerto, (error) => {
 
 const io = new IOServer(expressServer);
 
-
-const productosList = new Contenedor('./productos.txt');
-const messageLog = new Contenedor('./messageLog.txt');
+const productosDB = require('./db/database').mySQLConnection;
+const productosList = new Contenedor(productosDB, 'products');
+const messagesDB = require('./db/database').sqliteConnection;
+const messageLog = new Contenedor(messagesDB, 'messages');
 // let messageArray = [];
 
 io.on('connection', async socket => {
