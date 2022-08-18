@@ -1,0 +1,119 @@
+.loginF {
+    color: white;
+    text-align: center;
+    background-color: #343a40;
+    margin: 10%;
+    padding: 2%;
+}
+
+.inputF{
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+    font-size: 1.1rem;
+}
+
+button {
+    color: #fff;
+    background-color: #007bff;
+    border: 5px solid #343a40;
+}
+
+.loginAdentro {
+    color: white;
+    text-align: center;
+    background-color: #343a40;
+    padding: 1%;
+    margin-top: 3%;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 40%;
+}
+
+#login {
+    text-align: center;
+}
+
+.logoHeader {
+    height: 70px;
+}
+
+.mensajeExit {
+    color: white;
+    text-align: center;
+    background-color: #343a40;
+    margin: 10%;
+    padding: 2%;
+}
+
+.tituloN {
+    text-decoration: none;
+    color: white;
+}
+
+.tituloN:hover {
+    text-decoration: none;
+    color: white;
+}
+
+.containerForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.productForm{
+    font-size: 1rem;
+}
+
+.form-group {
+    font-size: 1.25rem;
+}
+
+.inputP {
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+}
+
+.listProd {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.card {
+    margin-bottom: 3%;
+}
+
+.title{
+    color: olivedrab;
+    text-align: center;
+    margin: 2rem;
+    margin-bottom: 2%;
+}
+
+.titleChat {
+    color: white;
+    margin-bottom: 5%;
+}
+
+.chat {
+    background-color: rgb(182, 182, 182);
+    width: 50%;
+    padding: 2%;
+    margin-bottom: -1.5%;
+}
+
+.chatF {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.mensajes {
+    margin-bottom: 100px;
+    background-color: rgb(182, 182, 182);
+    width: 50%;
+}
