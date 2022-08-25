@@ -14,6 +14,11 @@ const usernameForm = document.getElementById('usernameForm');
 const app = document.getElementById('app');
 const chat = document.getElementById('chat');
 const root = document.getElementById('root');
+const userUsername = document.getElementById('userUsername');
+const userName = document.getElementById('userName');
+const userSurname = document.getElementById('userSurname');
+const userEmail = document.getElementById('userEmail');
+const userLogout = document.getElementById('userLogout');
 
 async function renderProducts(products) {
 	const response = await fetch('./templates/productos.hbs');
@@ -32,7 +37,7 @@ socket.on('server:products-test', async (products) => {
 	if (root) {
 		root.innerHTML = '';
 	}
-	const data = await fetch('http://localhost:8080/api/productos-test'); 
+	const data = await fetch('http://localhost:8080/api/productos-test');
 	const json = await data.json();
 	renderProducts(json);
 });
@@ -180,5 +185,21 @@ fetch(`/logged`)
 	.then((data) => {
 		if (data.status !== 'ok') {
 			app.innerHTML = '';
+		}
+	});
+
+fetch(`/login`)
+	.then((response) => response.json())
+	.then((data) => {
+		if (data.status === 200) {
+			console.log(data);
+			userUsername.innerHTML = data.user;
+			userName.innerHTML = data.name;
+			userSurname.innerHTML = data.surname;
+			userEmail.innerHTML = data.email;
+
+			userLogout.addEventListener('click', () => {
+				fetch(`/logout`);
+			});
 		}
 	});
