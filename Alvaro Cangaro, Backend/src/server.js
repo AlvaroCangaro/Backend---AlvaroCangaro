@@ -12,9 +12,15 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const User = require('./models/users.js');
+const randomNumbers = require('./routes/randomNumbers');
+require('dotenv').config();
+const yargs = require('yargs/yargs');
+const { hideBin } = require('yargs/helpers');
+const argv = yargs(hideBin(process.argv)).default({ port: 8080 }).alias({ p: 'port', }).argv;
 
-const expressServer = app.listen(8080, () =>
-	console.log('Servidor escuchando en el puerto 8080')
+
+const expressServer = app.listen(argv.port, () =>
+	console.log('Servidor escuchando en el puerto ' + argv.port)
 );
 
 const io = new IOServer(expressServer);
@@ -27,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
 	session({
-		secret: 'coderhouse',
+		secret: process.env.SESSIONSECRET,
 		cookie: {
 			httpOnly: false,
 			secure: false,
@@ -45,6 +51,7 @@ app.use(passport.session());
 // app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/api/productos-test', productsTest);
+app.use('/api/random-numbers', randomNumbers);
 
 const checkIsAuthenticated = (req, res, next) => {
 	if (req.isAuthenticated()) {
@@ -185,6 +192,18 @@ app.get('/', (req, res) => {
 	} else {
 		res.sendFile(path.join(__dirname, '../public/login.html'));
 	}
+});
+
+app.get('/info', (req, res) => {
+	res.json({
+		input_arguments: process.argv,
+		so: process.platform,
+		node_version: process.version,
+		total_memory_reserved: process.memoryUsage().rss,
+		execution_path: process.execPath,
+		process_id: process.pid,
+		process_folder: process.cwd(),
+	});
 });
 
 app.get('*', (req, res) => {
