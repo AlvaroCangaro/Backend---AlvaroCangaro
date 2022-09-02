@@ -1,0 +1,85 @@
+forever start src/server.js -- -m cluster
+forever list
+tasklist
+forever start -w src/server.js -- -m cluster
+
+pm2 start src/server.js
+pm2 start src/server.js -i max
+pm2 list
+tasklist
+pm2 start src/server.js --watch
+
+Redirigir todas las consultas a /api/randomsN a un cluster de servidores escuchando en el puerto 8081. El cluster sera creado desde node utilizando el modulo nativo cluster.
+El resto de las consultas, redirigirlas a un servidor individual escuchando en el puerto 8080.
+Verificar que todo funcione correctamente.
+
+--------------------------------------------------------------------------------
+
+events {
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    upstream node_app {
+        server 127.0.0.1:8080;
+    }
+
+    upstream node_app_cluster {
+        server 127.0.0.1:8081;
+    }
+
+    server {
+        listen       80;
+        server_name  mginx_node;
+        root ../NginxNode/public;
+
+
+        location /api/randomsN {
+            proxy_pass  http://node_app_cluster;
+        }
+        location / {
+            proxy_pass  http://node_app;
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+Modificar la configuracion para que todas las consultas a /api/randomsN sean redirigidas a un cluster de servidores gestionado desde nginx, repartiendolas entre 4 instancias escuchando en los puertos 8082, 8083, 8084 y 8085.
+
+events {
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    upstream node_app {
+        server 127.0.0.1:8080;
+    }
+
+    upstream node_app_cluster {
+        server 127.0.0.1:8082;
+        server 127.0.0.1:8083;
+        server 127.0.0.1:8084;
+        server 127.0.0.1:8085;
+    }
+
+    server {
+        listen       80;
+        server_name  mginx_node;
+        root ../NginxNode/public;
+
+
+        location /api/randomsN {
+            proxy_pass  http://node_app_cluster;
+        }
+        location / {
+            proxy_pass  http://node_app;
+        }
+    }
+}
