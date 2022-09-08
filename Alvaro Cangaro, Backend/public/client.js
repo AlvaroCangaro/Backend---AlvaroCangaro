@@ -50,9 +50,6 @@ productForm.addEventListener('submit', (e) => {
 		price: productPrice.value,
 		thumbnail: productThumbnail.value,
 	};
-
-	console.log(product);
-
 	socket.emit('client:addProduct', product);
 });
 

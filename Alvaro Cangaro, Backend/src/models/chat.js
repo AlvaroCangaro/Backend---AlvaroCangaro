@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 const { dbConnectionMongo } = require('../dbConfig.js');
+const { logger } = require('../logger/index.js');
 
 mongoose
 	.connect(dbConnectionMongo)
-	.catch((error) => console.log('error al conectar con mongodb: ', error));
+	.then(() => logger.info('Mongodb conectado'))
+	.catch((error) => logger.info('Error al conectar con mongodb: ', error));
 
 class Chat {
 	constructor(collectionName, schema) {
@@ -20,7 +22,7 @@ class Chat {
 			const res = await objectModel.save();
 			return res;
 		} catch (err) {
-			console.log('Error al guardar el chat: ', err);
+			logger.info('Error al guardar el chat: ', err);
 			return false;
 		}
 	}
@@ -30,7 +32,7 @@ class Chat {
 			const messages = await this.collection.find({}, { __v: 0 });
 			return messages;
 		} catch (err) {
-			console.log('Error al conseguir chat: ', err);
+			logger.info('Error al conseguir chat: ', err);
 			return false;
 		}
 	}

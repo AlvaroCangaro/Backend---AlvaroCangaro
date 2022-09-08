@@ -1,6 +1,7 @@
 const User = require('../models/users.js');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
+const { logger } = require('../logger/index.js');
 
 const isValidPassword = (plainPassword, hashedPassword) => {
     return bcrypt.compareSync(plainPassword, hashedPassword);
@@ -16,7 +17,7 @@ const loginStrategy = new LocalStrategy(async (username, password, done) => {
 
         done(null, user);
     } catch (err) {
-        console.log('Error en inicio de sesion', err);
+        logger.error('Error en inicio de sesion', err);
         done('Error en login', null);
     }
 });

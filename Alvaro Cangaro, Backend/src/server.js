@@ -22,6 +22,9 @@ const registerStrategy = require('./passport/register');
 const loginStrategy = require('./passport/login');
 const cluster = require('cluster');
 const os = require('os');
+const compression = require('compression');
+const { logRequests, logInexistentRoutes, } = require('./middlewares/logRequests');
+const { logger } = require('./logger');
 
 let expressServer;
 
@@ -31,12 +34,12 @@ if (argv.mode === 'cluster' && cluster.isPrimary) {
 	threads.map(() => cluster.fork());
 
 	cluster.on('exit', (worker, code, signal) => {
-		console.log(`worker ${worker.process.pid} died`);
+		logger.info(`worker ${worker.process.pid} died`);
 		cluster.fork();
 	});
 } else {
 	expressServer = app.listen(argv.port, () =>
-		console.log(
+		logger.info(
 			`Servidor escuchando en el puerto ${argv.port} - worker: ${process.pid}`
 		)
 	);
@@ -59,10 +62,12 @@ app.use(
 	})
 );
 
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(logRequests);
 
 app.use('/api/productos-test', productsTest);
 app.use('/api/randomsN', randomNumbers);
@@ -77,9 +82,7 @@ app.get('/', (req, res) => {
 	}
 });
 
-app.get('*', (req, res) => {
-	res.status(404).send('404 - Ruta no encontrada');
-});
+app.get('*', logInexistentRoutes);
 
 passport.use('register', registerStrategy);
 passport.use('login', loginStrategy);
@@ -105,7 +108,7 @@ const chat = new Chat('chats', {
 });
 
 io.on('connection', async (socket) => {
-	console.log('Usuario conectado ' + socket.id);
+	logger.info('Usuario conectado ' + socket.id);
 
 	const normalizedMessages = normalizeMensajes(await chat.getAll());
 

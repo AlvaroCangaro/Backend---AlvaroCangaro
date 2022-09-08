@@ -1,6 +1,7 @@
 const User = require('../models/users.js');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
+const { logger } = require('../logger/index.js');
 
 const hashPassword = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
@@ -27,7 +28,7 @@ const registerStrategy = new LocalStrategy(
 
             done(null, createdUser);
         } catch (err) {
-            console.log('Error in user register', err);
+            logger.error('Error in user register', err);
             done('Error en registro', null);
         }
     }
