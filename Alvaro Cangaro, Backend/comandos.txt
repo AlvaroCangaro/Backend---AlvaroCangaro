@@ -1,8 +1,0 @@
-//Comandos
-
-node --prof ./src/server
-artillery quick --count 50 -n 20 "http://localhost:8080/info" > result.txt
-node --prof-process artilleryTest.log > artilleryTestResults.log
-node ./src/autocannonBenchmark.js
-node --inspect ./src/server.js
-0x ./src/server.js
