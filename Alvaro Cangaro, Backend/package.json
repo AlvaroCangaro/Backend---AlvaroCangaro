@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node ./src/server.js",
     "dev": "nodemon ./src/server.js",
-    "0x": "0x ./src/server.js"
+    "0xStart": "0x src/server.js",
+    "test": "node src/autocannonBenchmark.js"
   },
   "keywords": [],
   "author": "",
